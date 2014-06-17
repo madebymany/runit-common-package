@@ -1,0 +1,8 @@
+#!/bin/bash
+
+SERVICE=$1; shift
+
+eval $(sed -e "s/^/export /" /etc/environment)
+
+cd /var/log/service/$SERVICE
+exec chpst -u logger svlogd /var/log/service/$SERVICE

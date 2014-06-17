@@ -1,0 +1,23 @@
+#!/bin/bash
+
+EXIT_STATUS=$1; shift;
+SERVICE=$1 shift;
+
+eval $(sed -e "s/^/export /" /etc/environment)
+
+
+if [[ $EXIT_STATUS -ne 0 ]] && [[ -n "${ALERT_EMAIL}" ]] && which sendmail >/dev/null; then
+  from_addr="${USER}@${HOSTNAME}"
+  echo "Alerting ${ALERT_EMAIL} of failure"
+  sendmail -i -f "$from_addr" "${ALERT_EMAIL}" <<EOF
+From: runit on $HOSTNAME <${from_addr}>
+To: Alerts <${ALERT_EMAIL}>
+Subject: ${SERVICE} Failed
+
+on $HOSTNAME
+
+Environment:
+
+$(printenv)
+EOF
+fi

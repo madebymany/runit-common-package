@@ -1,0 +1,27 @@
+#!/bin/bash
+set -e
+
+USER=logger
+
+case "$1" in
+    configure)
+
+        if ! id "${USER}" >/dev/null 2>&1
+        then
+            echo "creating user '${USER}'"
+            useradd --home "${HOME}" --user-group --system ${USER}
+        fi
+    ;;
+
+    triggered)
+        echo "no triggers"
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac

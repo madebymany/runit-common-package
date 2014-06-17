@@ -1,0 +1,12 @@
+jobs:
+  runit-common:
+    builder: "make"
+    base: "ubuntu:12.04"
+    packages:
+      - type: debian
+        name: runit-common
+        depends:
+          - runit
+        repos:
+          - mxm
+        target: install
