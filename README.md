@@ -1,4 +1,4 @@
-runit-commomn-package
+runit-common-package
 =====================
 
 Debian package of common runit tasks
