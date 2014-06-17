@@ -1,5 +1,5 @@
 jobs:
-  runit-common:
+  runit_common:
     builder: "make"
     base: "ubuntu:12.04"
     packages:
