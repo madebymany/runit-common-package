@@ -1,5 +1,8 @@
+software_groups: &software
+  - "base"
 jobs:
   runit_common:
+    software_groups: *software
     builder: "make"
     base: "ubuntu:12.04"
     packages:
