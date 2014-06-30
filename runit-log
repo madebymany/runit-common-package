@@ -4,5 +4,6 @@ SERVICE=$1; shift
 
 eval $(sed -e "s/^/export /" /etc/environment)
 
+echo "starting logger for service ${SERVICE}"
 cd /var/log/service/$SERVICE
 exec chpst -u logger svlogd /var/log/service/$SERVICE
