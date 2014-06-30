@@ -10,6 +10,7 @@ jobs:
         name: runit-common
         depends:
           - runit
+          - postfix
         repos:
-          - mxm
+          - mxm-public
         target: install
