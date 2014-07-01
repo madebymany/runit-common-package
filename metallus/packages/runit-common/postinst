@@ -2,15 +2,17 @@
 set -e
 
 USER=logger
+HOME=/var/log/service
 
 case "$1" in
     configure)
+      mkdir -p ${HOME}
 
-        if ! id "${USER}" >/dev/null 2>&1
-        then
-            echo "creating user '${USER}'"
-            useradd --home "${HOME}" --user-group --system ${USER}
-        fi
+      if ! id "${USER}" >/dev/null 2>&1
+      then
+          echo "creating user '${USER}'"
+          useradd --home "${HOME}" --user-group --system ${USER}
+      fi
     ;;
 
     triggered)
