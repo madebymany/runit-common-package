@@ -1,9 +1,17 @@
 #!/bin/bash
 
 SERVICE=$1; shift
+DIRECTORY=/var/log/service/${SERVICE}
 
 eval $(sed -e "s/^/export /" /etc/environment)
 
+if [[ ! -d $DIRECTORY ]]
+then
+  mkdir -p $DIRECTORT
+fi
+
+chown -R logger:logger $DIRECTORY
+
 echo "starting logger for service ${SERVICE}"
-cd /var/log/service/$SERVICE
-exec chpst -u logger svlogd /var/log/service/$SERVICE
+cd $DIRECTORY
+exec chpst -u logger svlogd $DIRECTORY
