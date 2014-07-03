@@ -1,17 +1,23 @@
 #!/bin/bash
 
-SERVICE=$1; shift
-DIRECTORY=/var/log/service/${SERVICE}
+set -e
 
-eval $(sed -e "s/^/export /" /etc/environment)
+SERVICE=$1; shift
+DIRECTORY="/var/log/service/${SERVICE}"
+
+eval "$(sed -e "s/^/export /" /etc/environment)"
 
 if [[ ! -d $DIRECTORY ]]
 then
-  mkdir -p $DIRECTORT
+  mkdir -p "$DIRECTORY"
 fi
 
-chown -R logger:logger $DIRECTORY
+if [[ ! -r ${DIRECTORY}/config ]]
+then
+  echo -e "U127.0.0.1\np${SERVICE}: " >"${DIRECTORY}/config"
+fi
 
-echo "starting logger for service ${SERVICE}"
-cd $DIRECTORY
-exec chpst -u logger svlogd $DIRECTORY
+chown -R logger:logger "$DIRECTORY"
+echo "Starting logger for ${SERVICE} service..."
+cd "$DIRECTORY"
+exec chpst -u logger svlogd "$DIRECTORY"
