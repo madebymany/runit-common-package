@@ -6,17 +6,19 @@ HOME=/var/log/service
 
 case "$1" in
     configure)
-      mkdir -p ${HOME}
-
       if ! id "${USER}" >/dev/null 2>&1
       then
           echo "creating user '${USER}'"
-          useradd --home "${HOME}" --user-group --system ${USER}
+          useradd --home "${HOME}" --user-group --system ${USER} \
+              --shell /usr/sbin/nologin
       fi
+      mkdir -p "${HOME}"
+      chown -R ${USER}:${USER} "${HOME}"
+      find "${HOME}" -type d -exec chmod g+s "{}" \+
     ;;
 
     triggered)
-        echo "no triggers"
+        # nothing
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
