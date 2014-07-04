@@ -10,6 +10,7 @@ jobs:
         name: runit-common
         depends:
           - runit
+          - runit-logging
           - postfix
         repos:
           - mxm-public
