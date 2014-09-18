@@ -13,4 +13,7 @@ jobs:
           - postfix
         repos:
           - mxm-public
+        promote_through:
+          - unstable
+          - stable
         target: install
