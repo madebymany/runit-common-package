@@ -1,16 +1,15 @@
-software_groups: &software
-  - "base"
-
 packages:
   branch_codenames:
-    master: unstable
-    production: stable
+    master: trusty-unstable
+    production: trusty-stable
 
 jobs:
   runit_common:
-    software_groups: *software
     builder: "make"
-    base: "ubuntu:12.04"
+    base: "quay.io/madebymany/build-bases:trusty"
+    build_depends:
+      - runit
+      - postfix
     packages:
       - type: debian
         name: runit-common
