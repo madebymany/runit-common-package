@@ -1,3 +1,8 @@
+packages:
+  branch_codenames:
+    master: trusty-unstable
+    production: trusty-stable
+
 jobs:
   runit_common:
     builder: "make"
@@ -13,4 +18,7 @@ jobs:
           - postfix
         repos:
           - mxm-public
+        promote_through:
+          - unstable
+          - stable
         target: install
