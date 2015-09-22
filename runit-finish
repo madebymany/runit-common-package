@@ -1,23 +1,38 @@
 #!/bin/bash
+set -eo pipefail
 
-EXIT_STATUS=$1; shift;
-SERVICE=$1 shift;
-
-eval $(sed -e "s/^/export /" /etc/environment)
-
-
-if [[ $EXIT_STATUS -ne 0 ]] && [[ -n "${ALERT_EMAIL}" ]] && which sendmail >/dev/null; then
-  from_addr="${USER}@${HOSTNAME}"
-  echo "Alerting ${ALERT_EMAIL} of failure"
-  sendmail -i -f "$from_addr" "${ALERT_EMAIL}" <<EOF
-From: runit on $HOSTNAME <${from_addr}>
-To: Alerts <${ALERT_EMAIL}>
-Subject: ${SERVICE} Failed
-
-on $HOSTNAME
-
-Environment:
-
-$(printenv)
+usage() {
+cat <<-EOF
+Usage:       runit-finish -n [name of service] 
+Description: send out information on the stopped process, will log to syslog and send a message to Slack if the if the process fails 
 EOF
+}
+
+if [[ $# -eq 0 ]]
+then
+    usage
+    exit 1
 fi
+
+while getopts ":n:u:g:c:" o; do
+    case "${o}" in
+        n)
+            name=${OPTARG}
+            ;;
+        *)
+            usage
+            exit 1
+            ;;
+    esac
+done
+
+env_vars="/etc/environment"
+if [ -f "/etc/environment" ]; then
+  eval $(sed -e "s/^/export /" "$env_vars")
+fi
+
+if [[ "$1" -eq "1" ]]; then
+  slackcat "@channel $name failed to run"
+fi
+
+echo "stopping $name" | logger -t "$name"

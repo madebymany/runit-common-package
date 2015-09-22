@@ -1,0 +1,51 @@
+#!/bin/bash
+set -eo pipefail
+
+usage() {
+cat <<-EOF
+Usage:       runit-start -n [name of service] -u [user to runas] -g [group to runas] -c [command to run]
+Description: will start a service auto loading environment information, it expects the environment
+             information to live in the file /etc/default/{name of service}.
+EOF
+}
+
+if [[ $# -eq 0 ]]
+then
+    usage
+    exit 1
+fi
+
+while getopts ":n:u:g:c:" o; do
+    case "${o}" in
+        n)
+            name=${OPTARG}
+            ;;
+        u)
+            user=${OPTARG}
+            ;;
+        g)
+            group=${OPTARG}
+            ;;
+        c)
+            cmd=${OPTARG}
+            ;;
+        *)
+            usage
+            exit 1
+            ;;
+    esac
+done
+
+env_vars="/etc/environment"
+if [ -f "/etc/environment" ]; then
+  eval $(sed -e "s/^/export /" "$env_vars")
+fi
+
+svc_env_vars="/etc/default/$name"
+if [ -f "$svc_env_vars" ]; then
+  eval $(sed -e "s/^/export /" "$svc_env_vars")
+fi
+
+exec 2>&1
+
+exec chpst -u "$user:$group" $cmd
