@@ -15,6 +15,7 @@ jobs:
         name: runit-common
         depends:
           - runit
+          - runit-systemd
           - postfix
         repos:
           - mxm-public
