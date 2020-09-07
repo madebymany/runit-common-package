@@ -1,12 +1,12 @@
 packages:
   branch_codenames:
-    master: bionic-unstable
-    production: bionic-stable
+    master: focal-unstable
+    production: focal-stable
 
 jobs:
   runit_common:
     builder: "make"
-    base: "quay.io/madebymany/build-bases:bionic"
+    base: "quay.io/madebymany/build-bases:focal"
     build_depends:
       - runit
       - postfix
